@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LINE風ストリーミングAIチャット</title>
 
   <!-- Supabaseライブラリ -->
@@ -26,7 +27,7 @@
     }
 
     .message {
-      max-width: 70%;
+      max-width: 80%;
       margin: 8px 0;
       padding: 10px 14px;
       border-radius: 18px;
@@ -34,6 +35,7 @@
       position: relative;
       clear: both;
       white-space: pre-wrap;
+      word-break: break-word;
     }
 
     .user {
@@ -55,6 +57,7 @@
       padding: 10px;
       background: #fff;
       border-top: 1px solid #ccc;
+      flex-wrap: nowrap;
     }
 
     #inputBox {
@@ -80,6 +83,28 @@
     #sendBtn:hover {
       background-color: #45a049;
     }
+
+    @media (max-width: 600px) {
+      .message {
+        max-width: 90%;
+        font-size: 15px;
+      }
+
+      #inputBox {
+        font-size: 15px;
+        padding: 8px;
+      }
+
+      #sendBtn {
+        padding: 8px 12px;
+        font-size: 15px;
+        margin-left: 8px;
+      }
+
+      #inputArea {
+        padding: 8px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -92,9 +117,8 @@
 </div>
 
 <script>
-  // === 各自ここを自分の値に変更してください ===
   const API_KEY = 'app-X2qFsOIzFxfmw2oS4h0LKJsH'; // ← DifyのAPIキー
-  const SUPABASE_URL = 'https://dynltexsdrdxfxnwdlwk.supabase.co';   // ← SupabaseプロジェクトのURL
+  const SUPABASE_URL = 'https://dynltexsdrdxfxnwdlwk.supabase.co';   // ← SupabaseプロジェクトURL
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5bmx0ZXhzZHJkeGZ4bndkbHdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY3MjY4MDIsImV4cCI6MjA2MjMwMjgwMn0.jKn95pqPEZKoXBgyj5MQYLUCYtvuOnGvPCcAll_G2pI';              // ← Supabase anonキー
   const USER_ID = 'user-001';
   let conversationId = '';
@@ -122,7 +146,7 @@
 
     const botDiv = addMessage('...', 'bot');
 
-    // アニメーション開始
+    // 入力中アニメーション
     let loadingDots = 0;
     let animationRunning = true;
     const animInterval = setInterval(() => {
@@ -183,7 +207,6 @@
         });
       }
 
-      // Supabase保存
       const { error } = await supabaseClient.from('chat_logs').insert([
         {
           user_id: USER_ID,
@@ -205,7 +228,6 @@
     chatLog.scrollTop = chatLog.scrollHeight;
   };
 
-  // Enterキー送信
   inputBox.addEventListener("keydown", function(event) {
     if (event.key === "Enter") sendBtn.click();
   });
