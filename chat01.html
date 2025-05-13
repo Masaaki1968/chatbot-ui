@@ -11,7 +11,7 @@
   <style>
     body {
       font-family: sans-serif;
-      font-size: 16px;
+      font-size: 18px;
       margin: 0;
       padding: 0;
       background: #f1f1f1;
@@ -28,16 +28,14 @@
     }
 
     .message {
-      max-width: 90%;
-      font-size; 16px;
-      margin: 8px 0;
-      padding: 10px 14px;
-      border-radius: 18px;
-      line-height: 1.4;
-      position: relative;
-      clear: both;
-      white-space: pre-wrap;
+      max-width: 80%;
+      margin: 10px 0;
+      padding: 14px 18px;
+      border-radius: 20px;
+      font-size: 18px;
+      line-height: 1.6;
       word-break: break-word;
+      white-space: pre-wrap;
     }
 
     .user {
@@ -64,21 +62,21 @@
 
     #inputBox {
       flex: 1;
-      padding: 10px;
-      font-size: 16px;
+      padding: 12px;
+      font-size: 18px;
       border: 1px solid #ccc;
-      border-radius: 20px;
+      border-radius: 24px;
       outline: none;
     }
 
     #sendBtn {
-      padding: 10px 16px;
+      padding: 12px 18px;
       margin-left: 10px;
-      font-size: 16px;
+      font-size: 18px;
       border: none;
       background-color: #4caf50;
       color: white;
-      border-radius: 20px;
+      border-radius: 24px;
       cursor: pointer;
     }
 
@@ -88,24 +86,14 @@
 
     @media (max-width: 600px) {
       .message {
+        font-size: 18px;
         max-width: 90%;
-        font-size: 15px;
       }
 
-      #inputBox {
-        font-size: 15px;
-        padding: 10px;
-      }
-
+      #inputBox,
       #sendBtn {
-        font-size: 16px;
-        padding: 10px;
-        font-size: 15px;
-        margin-left: 8px;
-      }
-
-      #inputArea {
-        padding: 8px;
+        font-size: 18px;
+        padding: 12px;
       }
     }
   </style>
@@ -120,9 +108,9 @@
 </div>
 
 <script>
-  const API_KEY = 'app-X2qFsOIzFxfmw2oS4h0LKJsH'; // ← DifyのAPIキー
-  const SUPABASE_URL = 'https://dynltexsdrdxfxnwdlwk.supabase.co';   // ← SupabaseプロジェクトURL
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5bmx0ZXhzZHJkeGZ4bndkbHdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY3MjY4MDIsImV4cCI6MjA2MjMwMjgwMn0.jKn95pqPEZKoXBgyj5MQYLUCYtvuOnGvPCcAll_G2pI';              // ← Supabase anonキー
+  const API_KEY = 'app-X2qFsOIzFxfmw2oS4h0LKJsH';
+  const SUPABASE_URL = 'https://dynltexsdrdxfxnwdlwk.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR5bmx0ZXhzZHJkeGZ4bndkbHdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY3MjY4MDIsImV4cCI6MjA2MjMwMjgwMn0.jKn95pqPEZKoXBgyj5MQYLUCYtvuOnGvPCcAll_G2pI';
   const USER_ID = 'user-001';
   let conversationId = '';
 
@@ -149,7 +137,6 @@
 
     const botDiv = addMessage('...', 'bot');
 
-    // 入力中アニメーション
     let loadingDots = 0;
     let animationRunning = true;
     const animInterval = setInterval(() => {
