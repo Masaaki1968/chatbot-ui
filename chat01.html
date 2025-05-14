@@ -32,7 +32,9 @@
     }
 
     .message {
-      max-width: 65%;
+      display: flex;
+      align-items: flex-end;
+      max-width: 80%;
       margin: 6px 0;
       padding: 10px 14px;
       border-radius: 18px;
@@ -54,6 +56,27 @@
       align-self: flex-start;
       margin-right: auto;
       border-bottom-left-radius: 0;
+    }
+
+    .icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 8px;
+    }
+
+    .message-wrapper {
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .message-wrapper.bot {
+      flex-direction: row;
+    }
+
+    .message-wrapper.user {
+      flex-direction: row-reverse;
     }
 
     #inputArea {
@@ -107,18 +130,33 @@
   const USER_ID = 'user-001';
   let conversationId = '';
 
+  // GitHub上の画像URLに差し替えてください
+  const BOT_ICON_URL = 'https://raw.githubusercontent.com/yourname/yourrepo/main/bot-icon.png';
+  const USER_ICON_URL = 'https://raw.githubusercontent.com/Masaaki1968/chatbot-ui/e8032f82c8e7f895fcb30404ed7ff66df82bbb98/aikon.png';
+
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   const chatLog = document.getElementById('chatLog');
   const inputBox = document.getElementById('inputBox');
   const sendBtn = document.getElementById('sendBtn');
 
   function addMessage(text, type = 'bot') {
-    const div = document.createElement('div');
-    div.className = `message ${type}`;
-    div.textContent = text;
-    chatLog.appendChild(div);
+    const wrapper = document.createElement('div');
+    wrapper.className = `message-wrapper ${type}`;
+
+    const icon = document.createElement('img');
+    icon.className = 'icon';
+    icon.src = type === 'user' ? USER_ICON_URL : BOT_ICON_URL;
+
+    const message = document.createElement('div');
+    message.className = `message ${type}`;
+    message.textContent = text;
+
+    wrapper.appendChild(icon);
+    wrapper.appendChild(message);
+
+    chatLog.appendChild(wrapper);
     chatLog.scrollTop = chatLog.scrollHeight;
-    return div;
+    return message;
   }
 
   sendBtn.onclick = async () => {
