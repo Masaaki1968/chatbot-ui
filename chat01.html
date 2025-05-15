@@ -3,9 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>LINE風ストリーミングAIチャット</title>
-
-  <!-- Supabaseライブラリ -->
+  <title>LINE風AIチャット</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
   <style>
@@ -18,8 +16,6 @@
       display: flex;
       flex-direction: column;
       height: 100%;
-      width: 100%;
-      -webkit-font-smoothing: antialiased;
     }
 
     #chatLog {
@@ -28,14 +24,26 @@
       padding: 12px;
       background: #e5ddd5;
       box-sizing: border-box;
-      max-width: 100%;
+    }
+
+    .message-wrapper {
+      display: flex;
+      align-items: flex-end;
+      margin: 10px 0;
+    }
+
+    .message-wrapper.bot {
+      flex-direction: row;
+      justify-content: flex-start;
+    }
+
+    .message-wrapper.user {
+      flex-direction: row-reverse;
+      justify-content: flex-end;
     }
 
     .message {
-      display: flex;
-      align-items: flex-end;
-      max-width: 80%;
-      margin: 6px 0;
+      max-width: 70%;
       padding: 10px 14px;
       border-radius: 18px;
       font-size: 16px;
@@ -44,39 +52,22 @@
       white-space: pre-wrap;
     }
 
-    .user {
-      background: #dcf8c6;
-      align-self: flex-end;
-      margin-left: auto;
-      border-bottom-right-radius: 0;
+    .message.bot {
+      background: #ffffff;
+      border-bottom-left-radius: 0;
     }
 
-    .bot {
-      background: #fff;
-      align-self: flex-start;
-      margin-right: auto;
-      border-bottom-left-radius: 0;
+    .message.user {
+      background: #dcf8c6;
+      border-bottom-right-radius: 0;
     }
 
     .icon {
       width: 36px;
       height: 36px;
       border-radius: 50%;
+      margin-right: 8px;
       object-fit: cover;
-      margin: 0 8px;
-    }
-
-    .message-wrapper {
-      display: flex;
-      align-items: flex-end;
-    }
-
-    .message-wrapper.bot {
-      flex-direction: row;
-    }
-
-    .message-wrapper.user {
-      flex-direction: row-reverse;
     }
 
     #inputArea {
@@ -84,9 +75,6 @@
       padding: 8px;
       background: #fff;
       border-top: 1px solid #ccc;
-      flex-wrap: nowrap;
-      box-sizing: border-box;
-      max-width: 100%;
     }
 
     #inputBox {
@@ -130,9 +118,7 @@
   const USER_ID = 'user-001';
   let conversationId = '';
 
-  // GitHub上の画像URLに差し替えてください
-  const BOT_ICON_URL = 'https://raw.githubusercontent.com/yourname/yourrepo/main/bot-icon.png';
-  const USER_ICON_URL = 'https://raw.githubusercontent.com/Masaaki1968/chatbot-ui/e8032f82c8e7f895fcb30404ed7ff66df82bbb98/aikon.png';
+  const BOT_ICON_URL = 'https://raw.githubusercontent.com/Masaaki1968/chatbot-ui/main/aikon.png';
 
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   const chatLog = document.getElementById('chatLog');
@@ -143,16 +129,19 @@
     const wrapper = document.createElement('div');
     wrapper.className = `message-wrapper ${type}`;
 
-    const icon = document.createElement('img');
-    icon.className = 'icon';
-    icon.src = type === 'user' ? USER_ICON_URL : BOT_ICON_URL;
-
     const message = document.createElement('div');
     message.className = `message ${type}`;
     message.textContent = text;
 
-    wrapper.appendChild(icon);
-    wrapper.appendChild(message);
+    if (type === 'bot') {
+      const icon = document.createElement('img');
+      icon.className = 'icon';
+      icon.src = BOT_ICON_URL;
+      wrapper.appendChild(icon);
+      wrapper.appendChild(message);
+    } else {
+      wrapper.appendChild(message); // ユーザー側はアイコンなし
+    }
 
     chatLog.appendChild(wrapper);
     chatLog.scrollTop = chatLog.scrollHeight;
@@ -201,7 +190,6 @@
         if (done) break;
 
         const chunk = decoder.decode(value, { stream: true });
-
         chunk.split('\n').forEach(line => {
           if (line.startsWith('data:')) {
             try {
